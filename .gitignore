@@ -2,5 +2,6 @@
 quartz-example-job.txt
 .#*
 classes
-scope-pope.jar
+*.jar
 lib
+*.xml

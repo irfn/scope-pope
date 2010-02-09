@@ -15,5 +15,5 @@
         trigger (SimpleTrigger. "trigger1" "group1" when)]
     (.scheduleJob @*scheduler* job trigger)))
  
-;; (start-scheduler)
+;;(start-scheduler)
 ;;(schedule-job EmailPope (java.util.Date.))
