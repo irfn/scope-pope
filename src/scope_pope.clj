@@ -1,7 +1,7 @@
 (ns scope-pope
+	(:require [jobs EmailPope])
   (:import (org.quartz JobDetail SimpleTrigger)
-           (org.quartz.impl StdSchedulerFactory)
-           (jobs EmailPope)))
+           (org.quartz.impl StdSchedulerFactory)))
  
 (def *scheduler* (atom nil))
  

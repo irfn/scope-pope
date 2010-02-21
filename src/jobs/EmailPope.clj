@@ -16,7 +16,7 @@ representation of text."
 (def *query* "http://mingle.dcx.rackspace.com/projects/autohost/cards.xml?")
 
 (defn query-url []
-	(str  (url-encode *filters*)))
+	(str *query* (url-encode *filters*)))
 
 (defn get-for [url]
 	(new org.apache.commons.httpclient.methods.GetMethod url))

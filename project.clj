@@ -6,4 +6,9 @@
                  [commons-collections/commons-collections "3.1"]
                  [opensymphony/quartz "1.6.3"]
 								 [javax.mail/mail "1.4.1"]
-								 [commons-httpclient "3.1"]])
+								 [commons-httpclient "3.1"]]
+
+	:dev-dependencies [[leiningen/lein-swank "1.1.0"]
+									 [org.clojure/swank-clojure "1.1.0"]]
+	:main scope-pope
+	:namespaces jobs)
