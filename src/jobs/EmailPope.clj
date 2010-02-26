@@ -1,35 +1,43 @@
 (ns jobs.EmailPope
-  (:use [clojure.contrib.duck-streams :only [spit]])
-	(:import (java.net URL URLEncoder))
+	(:require [clojure.zip :as zip]
+            [clojure.xml :as xml]
+            [clojure.contrib.zip-filter])
+  (:use clojure.contrib.zip-filter.xml
+        clojure.contrib.duck-streams)
+	(:import (java.net URL URLEncoder)
+					 (java.io ByteArrayInputStream))
   (:gen-class
    :implements [org.quartz.Job]))
  
 
 (defn url-encode
-  "Wrapper around java.net.URLEncoder returning a (UTF-8) URL encoded
-representation of text."
+  "Wrapper around java.net.URLEncoder returning a (UTF-8) URL encoded representation of text."
   [text]
   (URLEncoder/encode text "UTF-8"))
 
-(def *filters* "filters[]=[Type][is][Story+Card]&filters[]=[Type][is][Defect]&filters[]=[Type][is][Dev+Task]&style=grid&color_by=type&aggregate_type=sum&aggregate_property=tasking+estimate&tab=Active+Cards&rerank=&group_by=")
+(def *filters* "SELECT COUNT(*) WHERE Type = 'Story Card'")
 
-(def *query* "http://mingle.dcx.rackspace.com/projects/autohost/cards.xml?")
+(def *project-url* "http://mingle.dcx.rackspace.com/projects/autohost")
 
-(defn query-url []
-	(str *query* (url-encode *filters*)))
+(def *query* "/cards/execute_mql.xml?mql=")
 
-(defn get-for [url]
-	(new org.apache.commons.httpclient.methods.GetMethod url))
-
-(defn execute-method [method]
-	(.executeMethod 
-		(new org.apache.commons.httpclient.HttpClient) method)
-	(.getResponseBodyAsString method))
-
-(defn get-cards 
+(defn query-url
 	[]
-	(execute-method (get-for (query-url))))
+	(str *project-url* *query* (url-encode *filters*)))
+
+(defn results 
+	[]
+	(zip/xml-zip (clojure.xml/parse (query-url))))
+
+(defn result
+	[]
+	(first (get (first
+							 (xml1-> (results) :results :result :Count-))
+							:content)))
 
 (defn -execute
   [this context]
-  (spit "cards.xml" (get-cards)))
+	(let scope-results (result))
+	(if (not (= scope-results
+				 (slurp "scope.results")))
+		(spit "scope.results" (result)))
