@@ -37,7 +37,7 @@
 
 (defn -execute
   [this context]
-	(let scope-results (result))
-	(if (not (= scope-results
-				 (slurp "scope.results")))
-		(spit "scope.results" (result)))
+	(let [scope-results (result)]
+		(if (not (= scope-results
+								(slurp "scope.results")))
+			(spit "scope.results" scope-results))))
