@@ -15,5 +15,5 @@
         trigger (CronTrigger. "trigger1" "group1" "job1" "group1" "0 0/3 * ? * MON-FRI")]
     (.scheduleJob @*scheduler* job trigger)))
  
-(start-scheduler)
-(schedule-job EmailPope)
+;;(start-scheduler)
+;;(schedule-job EmailPope)
