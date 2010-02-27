@@ -28,16 +28,12 @@
 	[]
 	(str *project-url* *query* (url-encode *filters*)))
 
-(defn results 
-	[]
-;	 (http/request (query-url))
-	(zip/xml-zip (clojure.xml/parse (query-url))))
+(defn results []
+	(ByteArrayInputStream. (.getBytes (nth (:body-seq (http/request (query-url))) 3))))
 
 (defn result
 	[]
-	(first (get (first
-							 (xml1-> (results) :results :result :sum_release_estimate))
-							:content)))
+	(first (get (clojure.xml/parse (results)) :content)))
 
 (defn update-and-report [scope]	
 	(doto (SimpleEmail.)
