@@ -13,7 +13,7 @@
 (defn schedule-job
   [job]
   (let [job (JobDetail. "job1" "group1" job)
-        trigger (CronTrigger. "trigger1" "group1" "job1" "group1" "0 0/3 * ? * MON-FRI")]
+        trigger (CronTrigger. "trigger1" "group1" "job1" "group1" "0 0/3 * ? * MON-SAT")]
     (.scheduleJob @*scheduler* job trigger)))
 
 (defn -main [& args]
