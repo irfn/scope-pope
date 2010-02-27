@@ -1,9 +1,11 @@
 (ns jobs.EmailPope
 	(:require [clojure.zip :as zip]
             [clojure.xml :as xml]
-            [clojure.contrib.zip-filter])
- (:use clojure.contrib.zip-filter.xml
-       clojure.contrib.duck-streams)
+            [clojure.contrib.zip-filter]
+						[clojure.http.client :as http])
+	(:use [clojure.contrib.zip-filter.xml]
+				[clojure.contrib.duck-streams])
+	
 	(:import (java.net URL URLEncoder)
 					 (java.io ByteArrayInputStream)
 					 (org.apache.commons.mail SimpleEmail))
@@ -16,9 +18,9 @@
   [text]
   (URLEncoder/encode text "UTF-8"))
 
-(def *filters* "SELECT COUNT(*) WHERE Type = 'Story Card'")
+(def *filters* "SELECT SUM('Release Estimate') WHERE type = Story AND Release  = '1 - Interim Release' AND 'Story Type' != 'UI' AND Status != 'Dropped'  AND 'Scope Increase' != 'TW' AND Iteration IS NOT NULL")
 
-(def *project-url* "http://mingle.dcx.rackspace.com/projects/autohost")
+(def *project-url* "https://anandv:abcd1234@minglehosting.thoughtworks.com/bcg/api/v2/projects/bcg_contact_management_phase_a")
 
 (def *query* "/cards/execute_mql.xml?mql=")
 
@@ -28,12 +30,13 @@
 
 (defn results 
 	[]
+;	 (http/request (query-url))
 	(zip/xml-zip (clojure.xml/parse (query-url))))
 
 (defn result
 	[]
 	(first (get (first
-							 (xml1-> (results) :results :result :Count-))
+							 (xml1-> (results) :results :result :sum_release_estimate))
 							:content)))
 
 (defn update-and-report [scope]	

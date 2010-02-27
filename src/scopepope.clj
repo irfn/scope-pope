@@ -1,7 +1,8 @@
-(ns scope-pope
+(ns scopepope
+	(:use jobs.EmailPope)
   (:import (org.quartz JobDetail CronTrigger)
-           (org.quartz.impl StdSchedulerFactory)
-					 (jobs EmailPope)))
+           (org.quartz.impl StdSchedulerFactory))
+	(:gen-class))
  
 (def *scheduler* (atom nil))
  
@@ -14,6 +15,7 @@
   (let [job (JobDetail. "job1" "group1" job)
         trigger (CronTrigger. "trigger1" "group1" "job1" "group1" "0 0/3 * ? * MON-FRI")]
     (.scheduleJob @*scheduler* job trigger)))
- 
-;;(start-scheduler)
-;;(schedule-job EmailPope)
+
+(defn -main [& args]
+	(start-scheduler)
+	(schedule-job jobs.EmailPope))
