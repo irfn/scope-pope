@@ -2,7 +2,7 @@
 	(:require [clojure.zip :as zip]
             [clojure.xml :as xml]
             [clojure.contrib.zip-filter]
-						[clojure.http.client :as http])
+ 						[clojure.http.client :as http])
 	(:use [clojure.contrib.zip-filter.xml]
 				[clojure.contrib.duck-streams])
 	
@@ -40,7 +40,7 @@
       (.setHostName "smtp.gmail.com")
       (.setSslSmtpPort "465")
       (.setSSL true)
-      (.addTo "ishah@thoughtworks.com")
+      (.addTo "anandv@thoughtworks.com")
       (.setFrom "pope@irfanshah.net" "Scope Pope")
       (.setSubject "Scope changed")
       (.setMsg (str "Scope changed from " (slurp "scope.results") " to " scope))
